@@ -1,57 +1,30 @@
+// IMPORT SERVICE
+const service = require("../services/projectService");
 
-const projectService = require("../services/ProjectService");
-
-// GET ALL PROJECTS
-function getProjects(req, res) {
-    res.json(projectService.getAllProjects());
+// DEFINE CONTROLLERS THAT TALK TO SERVICE AND RETURN RESPONSE
+async function getAll(req, res) {
+  const projects = await service.getAllProjects();
+  res.json(projects);
 }
 
-// GET ONE PROJECT
-function getProject(req, res) {
-    const id = parseInt(req.params.id);
-    const project = projectService.getProjectById(id);
-    if (!project) {
-        return res.status(404).json({ message: "Project not found" });
-    }
-    res.json(project);
+async function getOne(req, res) {
+  const project = await service.getProjectById(req.params.id);
+  res.json(project);
 }
 
-// CREATE NEW PROJECT// CREATE NEW PROJECT
-function createProject(req, res) {
-    const { name, description, status } = req.body;
-    if (!name || !description || !status) {
-        return res.status(400).json({ message: "Missing required fields" });
-    }
-    const newProject = { name, description, status };
-    const created = projectService.addProject(newProject);
-    res.status(201).json(created);
+async function create(req, res) {
+  const project = await service.createProject(req.body);
+  res.json(project);
 }
 
-
-// UPDATE PROJECT
-function updateProject(req, res) {
-    const id = parseInt(req.params.id);
-    const updatedProject = projectService.updateProject(id, req.body);
-    if (!updatedProject) {
-        return res.status(404).json({ message: "Project not found" });
-    }
-    res.json(updatedProject);
+async function update(req, res) {
+  const project = await service.updateProject(req.params.id, req.body);
+  res.json(project);
 }
 
-// DELETE PROJECT
-function deleteProject(req, res) {
-    const id = parseInt(req.params.id);
-    const deleted = projectService.deleteProject(id);
-    if (!deleted) {
-        return res.status(404).json({ message: "Project not found" });
-    }
-    res.json({ message: "Project deleted" });
+async function remove(req, res) {
+  await service.deleteProject(req.params.id);
+  res.json({ message: "Project deleted" });
 }
 
-module.exports = {
-    getProjects,
-    getProject,
-    createProject,
-    updateProject,
-    deleteProject
-};
+module.exports = { getAll, getOne, create, update, remove };

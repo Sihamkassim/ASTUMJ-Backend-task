@@ -1,52 +1,26 @@
-// REQUIRE PROJECTS ARRAY FROM DATA FILE
-const projects = require("../data/Projects");
+// IMPORT MODEL
+const Project = require("../models/Project");
 
-// FUNCTION TO GET NEXT ID
-function getNextId() {
-    if (projects.length === 0) return 1;
-    return Math.max(...projects.map(p => p.id)) + 1;
+// SERVICE FUNCTIONS TO HANDLE DATA LOGIC
+async function getAllProjects() {
+  return await Project.find();
 }
 
-// FUNCTION TO GET ALL PROJECTS
-function getAllProjects() {
-    return projects;
+async function getProjectById(id) {
+  return await Project.findById(id);
 }
 
-// FUNCTION TO GET ONE PROJECT BY ID
-function getProjectById(id) {
-    return projects.find(p => p.id === id);
+async function createProject(data) {
+  const project = new Project(data);
+  return await project.save();
 }
 
-// FUNCTION TO ADD A NEW PROJECT
-function addProject(project) {
-    project.id = getNextId(); // SET ID BASED ON CURRENT MAX
-    projects.push(project);
-    return project;
+async function updateProject(id, data) {
+  return await Project.findByIdAndUpdate(id, data, { new: true });
 }
 
-// FUNCTION TO UPDATE PROJECT
-function updateProject(id, updatedData) {
-    const index = projects.findIndex(p => p.id === id);
-    if (index !== -1) {
-        projects[index] = { ...projects[index], ...updatedData };
-        return projects[index];
-    }
-    return null;
+async function deleteProject(id) {
+  return await Project.findByIdAndDelete(id);
 }
 
-// FUNCTION TO DELETE PROJECT
-function deleteProject(id) {
-    const index = projects.findIndex(p => p.id === id);
-    if (index !== -1) {
-        return projects.splice(index, 1)[0];
-    }
-    return null;
-}
-
-module.exports = {
-    getAllProjects,
-    getProjectById,
-    addProject,
-    updateProject,
-    deleteProject
-};
+module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject };

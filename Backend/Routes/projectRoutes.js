@@ -1,13 +1,12 @@
-// THIS FILE DEFINES ROUTES FOR PROJECTS
-
 const express = require("express");
 const router = express.Router();
-const projectController = require("../controllers/projectController");
+const controller = require("../controllers/projectController");
 
-router.get("/", projectController.getProjects);
-router.get("/:id", projectController.getProject);
-router.post("/", projectController.createProject);
-router.put("/:id", projectController.updateProject);
-router.delete("/:id", projectController.deleteProject);
+// ROUTE DEFINITIONS
+router.get("/", controller.getAll);
+router.get("/:id", controller.getOne);
+router.post("/", controller.create);
+router.put("/:id", controller.update);
+router.delete("/:id", controller.remove);
 
 module.exports = router;
